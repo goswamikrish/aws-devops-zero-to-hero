@@ -1,9 +1,15 @@
 #!/bin/bash
 set -e
 
-echo "Stopping container if exists..."
+CONTAINER_NAME="simple-python-flask-app"
+IMAGE_NAME="krishsoh/flask-app"
 
-docker stop simple-python-flask-app || true
-docker rm simple-python-flask-app || true
+echo "Stopping old container if exists..."
+docker stop $CONTAINER_NAME || true
+docker rm $CONTAINER_NAME || true
 
-echo "Done."
+echo "Pulling image..."
+docker pull $IMAGE_NAME
+
+echo "Running container..."
+docker run -d -p 5000:5000 --name $CONTAINER_NAME $IMAGE_NAME
