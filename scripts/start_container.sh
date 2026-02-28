@@ -1,8 +1,19 @@
 #!/bin/bash
 set -e
 
-# Pull the Docker image from Docker Hub
-docker pull krishsoh/simple-python-flask-app
+CONTAINER_NAME="simple-python-flask-app"
+IMAGE_NAME="krishsoh/simple-python-flask-app:latest"
 
-# Run the Docker image as a container
-docker run -d -p 5000:5000 krishsoh/simple-python-flask-app
+echo "Removing ALL containers..."
+docker rm -f $(docker ps -aq) || true
+
+echo "Restarting Docker to free ports..."
+systemctl restart docker
+
+echo "Pulling latest image..."
+docker pull $IMAGE_NAME
+
+echo "Running container..."
+docker run -d -p 5000:5000 --name $CONTAINER_NAME $IMAGE_NAME
+
+echo "Deployment completed successfully."
